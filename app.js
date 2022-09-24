@@ -3,13 +3,6 @@ console.log("Hello World!\n==========\n");
 // PROJECT Section
 console.log("PROJECT:\n==========\n");
 
-const testInput = document.querySelector("#test-input");
-const testButton = document.querySelector("#test-button");
-testButton.addEventListener("click", logValue);
-function logValue () {
-    console.log(testInput.value);
-}
-
 class Book {
     constructor(id, title, author, read) {
         this.id = id;
@@ -26,17 +19,6 @@ class Library {
         this.books = books;
     }
 
-
-    //Library.markRead(3)
-
-    markRead (id) {
-        for (let book of this.books) {
-            if (book.id == id) {
-                book.read = true;
-            }
-        }
-    }
-
     addBook () {
         const newTitle = document.querySelector("#title").value;
         const newAuthor = document.querySelector("#author").value;
@@ -50,6 +32,10 @@ class Library {
         const newAuthorCell = document.createElement("td");
         const newReadCell = document.createElement("input");
         newReadCell.setAttribute("type", "checkbox");
+        newReadCell.setAttribute("id", `check-${this.bookCount + 1}`)
+        newReadCell.setAttribute("class", "checkbox");
+
+        console.log(newReadCell.id);
 
         newTitleCell.textContent = newTitle;
         newAuthorCell.textContent = newAuthor;
@@ -66,8 +52,22 @@ class Library {
         tableBody.appendChild(newRow);
 
         this.bookCount++;
+        
         console.log(this.bookCount);
         console.log(newBook.id);
+
+        const checkboxes = document.querySelectorAll(".checkbox");
+        for (let checkbox of checkboxes) {
+            checkbox.addEventListener("click", () => {
+                checkbox.setAttribute("disabled", "true");
+                newBook.read = true;
+                //console.log(newBook.read); should return true
+            })
+        }
+        //console.log(newBook.read); should return false (before the checkbox is clicked)
+
+        clearValues();
+
     }
 
 }
@@ -79,4 +79,12 @@ addBookBtn.addEventListener("click", () => {
     myLibrary.addBook();
 });
 
+function clearValues () {
+    let newTitleBox = document.querySelector("#title");
+    let newAuthorBox = document.querySelector("#author");
+    let hasReadBox = document.querySelector("#has-read");
+    newTitleBox.value = "";
+    newAuthorBox.value = "";
+    hasReadBox.checked = false;
+}
 
