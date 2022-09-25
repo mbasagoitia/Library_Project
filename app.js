@@ -3,6 +3,8 @@ console.log("Hello World!\n==========\n");
 // PROJECT Section
 console.log("PROJECT:\n==========\n");
 
+const tableBody = document.querySelector("#tbody");
+
 class Book {
     constructor(id, title, author, read) {
         this.id = id;
@@ -15,6 +17,7 @@ class Book {
 class Library {
     constructor (bookCount, books) {
         bookCount = 0;
+        books = [];
         this.bookCount = bookCount;
         this.books = books;
     }
@@ -31,11 +34,10 @@ class Library {
         const newTitleCell = document.createElement("td");
         const newAuthorCell = document.createElement("td");
         const newReadCell = document.createElement("input");
+        newRow.setAttribute("id", `row-${this.bookCount + 1}`)
         newReadCell.setAttribute("type", "checkbox");
         newReadCell.setAttribute("id", `check-${this.bookCount + 1}`)
         newReadCell.setAttribute("class", "checkbox");
-
-        console.log(newReadCell.id);
 
         newTitleCell.textContent = newTitle;
         newAuthorCell.textContent = newAuthor;
@@ -48,15 +50,32 @@ class Library {
         newRow.appendChild(newAuthorCell);
         newRow.appendChild(newReadCell);
 
-        const tableBody = document.querySelector("#tbody");
         tableBody.appendChild(newRow);
 
         this.bookCount++;
-        
-        console.log(this.bookCount);
-        console.log(newBook.id);
+        this.books.push(newBook);
+
+        //add remove book button
+        const newRemoveCell = document.createElement("td");
+        const newBtn = document.createElement("button");
+        newBtn.setAttribute("id", `btn-${this.bookCount}`)
+        console.log(newBtn.id);
+        newBtn.textContent = "Remove Book";
+        newRemoveCell.appendChild(newBtn);
+        newRow.appendChild(newRemoveCell);
 
         const checkboxes = document.querySelectorAll(".checkbox");
+
+        //make remove book button work
+        let regEx = /\d+/;
+        newBtn.addEventListener("click", () => {
+            this.removeBook(parseInt((newBtn.id.match(regEx))[0]));
+            //reset book IDs so the function works again
+
+        });
+
+        //mark as read
+
         for (let checkbox of checkboxes) {
             checkbox.addEventListener("click", () => {
                 checkbox.setAttribute("disabled", "true");
@@ -67,6 +86,18 @@ class Library {
         //console.log(newBook.read); should return false (before the checkbox is clicked)
 
         clearValues();
+
+    }
+
+    removeBook (idParam) {
+        for (let book of this.books) {
+            if (idParam == book.id) {
+                let index = this.books.indexOf(book.idParam);
+                this.books.splice(index, 1);
+                let rowToRemove = document.querySelector(`#row-${idParam}`);
+                tableBody.removeChild(rowToRemove);
+            }
+        }
 
     }
 
