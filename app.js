@@ -59,22 +59,11 @@ class Library {
         const newRemoveCell = document.createElement("td");
         const newBtn = document.createElement("button");
         newBtn.setAttribute("id", `btn-${this.bookCount}`)
-        console.log(newBtn.id);
         newBtn.textContent = "Remove Book";
         newRemoveCell.appendChild(newBtn);
         newRow.appendChild(newRemoveCell);
 
         const checkboxes = document.querySelectorAll(".checkbox");
-
-        //make remove book button work
-        let regEx = /\d+/;
-        newBtn.addEventListener("click", () => {
-            this.removeBook(parseInt((newBtn.id.match(regEx))[0]));
-            //reset book IDs so the function works again
-
-        });
-
-        //mark as read
 
         for (let checkbox of checkboxes) {
             checkbox.addEventListener("click", () => {
@@ -83,6 +72,17 @@ class Library {
                 //console.log(newBook.read); should return true
             })
         }
+
+
+        //make remove book button work
+        let regEx = /\d+/;
+        newBtn.addEventListener("click", () => {
+            this.removeBook(parseInt((newBtn.id.match(regEx))[0]));
+            newBtn.parentElement.parentElement.remove();
+        });
+
+        //mark as read
+
         //console.log(newBook.read); should return false (before the checkbox is clicked)
 
         clearValues();
@@ -92,13 +92,15 @@ class Library {
     removeBook (idParam) {
         for (let book of this.books) {
             if (idParam == book.id) {
-                let index = this.books.indexOf(book.idParam);
+                // console.log(book);
+                let index = this.books.indexOf(book);
                 this.books.splice(index, 1);
-                let rowToRemove = document.querySelector(`#row-${idParam}`);
-                tableBody.removeChild(rowToRemove);
+                // console.log(`removed ${book.title}`);
+                //this will show the rest of the books remaining in the library and their info
+                console.log(this.books);
             }
         }
-
+       
     }
 
 }
@@ -118,4 +120,5 @@ function clearValues () {
     newAuthorBox.value = "";
     hasReadBox.checked = false;
 }
+
 
